@@ -69,21 +69,21 @@ module.exports = (robot) ->
 
       issue =
         key: issues.key
-        summary: issues.fields.summary.value
+        summary: issues.fields.summary
         assignee: ->
-          if issues.fields.assignee.value != undefined
-            issues.fields.assignee.value.displayName
+          if issues.fields.assignee != undefined
+            issues.fields.assignee.displayName
           else
             "no assignee"
-        status: issues.fields.status.value.name
+        status: issues.fields.status.name
         fixVersion: ->
-          if issues.fields.fixVersions? and issues.fields.fixVersions.value != undefined
-            issues.fields.fixVersions.value.map((fixVersion) -> return fixVersion.name).join(", ")
+          if issues.fields.fixVersions? and issues.fields.fixVersions != undefined
+            issues.fields.fixVersions.map((fixVersion) -> return fixVersion.name).join(", ")
           else
             "no fix version"
         url: process.env.HUBOT_JIRA_URL + '/browse/' + issues.key
 
-      cb "[#{issue.key}] #{issue.summary}. #{issue.assignee()} / #{issue.status}, #{issue.fixVersion()} <#{issue.url}>"    
+      cb "#{issue.key}: #{issue.summary}. #{issue.assignee()} / #{issue.status}, Fix for: #{issue.fixVersion()} #{issue.url}"    
       
   search = (msg, jql, cb) ->
     get msg, "search/?jql=#{escape(jql)}", (result) ->
